@@ -1,2 +1,2 @@
 :HL["/ai-ethics-scenario-game/_next/static/chunks/0v8sg969_t-uh.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"rZGc_sK7qXp7Jzs6aimXS"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"_klZuCfOTCXP1kyG4ZMRG"}
