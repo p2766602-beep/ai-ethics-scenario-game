@@ -7,10 +7,10 @@ type ModeId = 'same' | 'random' | 'assigned' | 'choice';
 type View = 'setup' | 'choice' | 'play' | 'summary';
 
 const modes: { id: ModeId; icon: string; title: string; note: string; best: string }[] = [
-  { id: 'same', icon: '◎', title: '全班同一題', note: '所有組別取得相同情境', best: '首回合示範' },
-  { id: 'random', icon: '⤨', title: '各組隨機題', note: '依組號優先分配不重複題目', best: '預設推薦' },
-  { id: 'assigned', icon: '⌁', title: '教師指定題', note: '精準控制主題與難度', best: '目標教學' },
-  { id: 'choice', icon: '◇', title: '學生三選一', note: '小組從三張題目共同選擇', best: '自主探索' },
+  { id: 'same', icon: '◎', title: '大家一起想同一題', note: '和其他小組探索相同情境', best: '一起暖身' },
+  { id: 'random', icon: '⤨', title: '每組探索不同題', note: '依組號優先取得不同情境', best: '推薦玩法' },
+  { id: 'assigned', icon: '⌁', title: '老師指定給我們', note: '一起聚焦這回合的主題', best: '聚焦主題' },
+  { id: 'choice', icon: '◇', title: '我們自己三選一', note: '小組共同決定想討論的題目', best: '自己決定' },
 ];
 
 const perspectiveOptions = ['想到不同角色', '檢查 AI 產出', '注意隱私風險', '發現公平問題', '釐清責任歸屬', '提出改善做法'];
@@ -116,7 +116,7 @@ export default function Home() {
   return (
     <main className="site-shell">
       <header className="topbar">
-        <button className="brand brand-button" onClick={() => setView('setup')} aria-label="回到活動設定">
+        <button className="brand brand-button" onClick={() => setView('setup')} aria-label="回到活動首頁">
           <span className="brand-mark">AI</span><span><strong>思辨島</strong><small>AI 倫理情境桌遊</small></span>
         </button>
         <div className="top-actions">
@@ -129,13 +129,13 @@ export default function Home() {
       {view === 'setup' && (
         <>
           <section className="intro">
-            <div><span className="eyebrow">教師模式・活動設定</span><h1>讓每一組，都說出不一樣的理由。</h1><p>口說討論為主，數位紀錄為輔。輸入相同活動代碼與組號，就能在不登入的情況下分配題目。</p></div>
+            <div><span className="eyebrow">小組出發前・一起準備</span><h1>讓每一組，都說出不一樣的理由。</h1><p>和全班使用同一個活動代碼，再填入你們的組號，系統就會準備這一組的情境卡。每個人的聲音都值得被聽見。</p></div>
             <div className="round-map" aria-label="建議活動流程"><span className="round active"><b>1</b>同題示範</span><i /><span className="round"><b>2</b>隨機探索</span><i /><span className="round"><b>3</b>自主選題</span></div>
           </section>
 
           <section className="setup-workspace">
             <div className="setup-main">
-              <div className="section-title"><span>01</span><div><small>ASSIGNMENT</small><h2>選擇派題方式</h2></div></div>
+              <div className="section-title"><span>01</span><div><small>選題方式</small><h2>我們想怎麼取得題目？</h2></div></div>
               <div className="mode-grid">
                 {modes.map((item) => (
                   <button key={item.id} className={`mode-card ${mode === item.id ? 'selected' : ''}`} onClick={() => setMode(item.id)}>
@@ -145,23 +145,23 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="section-title second"><span>02</span><div><small>GROUP</small><h2>設定牌組與組別</h2></div></div>
+              <div className="section-title second"><span>02</span><div><small>小組資料</small><h2>告訴系統我們是哪一組</h2></div></div>
               <div className="fields-grid">
-                <label><span>使用牌組</span><select value={deckId} onChange={(event) => { const id = event.target.value as DeckId; setDeckId(id); setTeacherCardId(cardsForDeck(id)[0].id); }}><option value="teacher">教師體驗版・6 張</option><option value="junior">國中版・10 張</option><option value="elementary">國小版・8 張</option></select></label>
-                <label><span>活動代碼</span><input value={activityCode} maxLength={8} onChange={(event) => setActivityCode(event.target.value.replace(/\s/g, ''))} /><small>全班輸入相同代碼</small></label>
-                <label><span>我的組號</span><input type="number" min="1" max={groupTotal} value={groupNumber} onChange={(event) => setGroupNumber(Math.max(1, Number(event.target.value)))} /></label>
-                <label><span>全班組數</span><input type="number" min="1" max="30" value={groupTotal} onChange={(event) => setGroupTotal(Math.max(1, Number(event.target.value)))} /></label>
-                <label><span>討論時間</span><select value={duration} onChange={(event) => setDuration(Number(event.target.value))}><option value="3">3 分鐘</option><option value="4">4 分鐘</option><option value="5">5 分鐘</option><option value="6">6 分鐘</option><option value="8">8 分鐘</option></select></label>
-                {mode === 'assigned' && <label><span>教師指定情境</span><select value={teacherCardId} onChange={(event) => setTeacherCardId(event.target.value)}>{deck.map((card) => <option key={card.id} value={card.id}>{card.id}・{card.title}</option>)}</select></label>}
+                <label><span>我們使用的牌組</span><select value={deckId} onChange={(event) => { const id = event.target.value as DeckId; setDeckId(id); setTeacherCardId(cardsForDeck(id)[0].id); }}><option value="teacher">教師體驗版・6 張</option><option value="junior">國中版・10 張</option><option value="elementary">國小版・8 張</option></select></label>
+                <label><span>全班共同代碼</span><input value={activityCode} maxLength={8} onChange={(event) => setActivityCode(event.target.value.replace(/\s/g, ''))} /><small>每一組輸入相同代碼</small></label>
+                <label><span>我們是第幾組？</span><input type="number" min="1" max={groupTotal} value={groupNumber} onChange={(event) => setGroupNumber(Math.max(1, Number(event.target.value)))} /></label>
+                <label><span>班上共有幾組？</span><input type="number" min="1" max="30" value={groupTotal} onChange={(event) => setGroupTotal(Math.max(1, Number(event.target.value)))} /></label>
+                <label><span>我們想討論多久？</span><select value={duration} onChange={(event) => setDuration(Number(event.target.value))}><option value="3">3 分鐘</option><option value="4">4 分鐘</option><option value="5">5 分鐘</option><option value="6">6 分鐘</option><option value="8">8 分鐘</option></select></label>
+                {mode === 'assigned' && <label><span>老師指定的情境</span><select value={teacherCardId} onChange={(event) => setTeacherCardId(event.target.value)}>{deck.map((card) => <option key={card.id} value={card.id}>{card.id}・{card.title}</option>)}</select></label>}
               </div>
             </div>
 
             <aside className="launch-panel">
-              <span className="launch-label">本次設定</span><div className="mini-deck"><i /><i /><i /><b>{deck.length}</b></div>
+              <span className="launch-label">我們的活動</span><div className="mini-deck"><i /><i /><i /><b>{deck.length}</b></div>
               <h2>{deckLabels[deckId]}</h2><p>{modes.find((item) => item.id === mode)?.title}・第 {groupNumber} 組</p>
-              <ul><li>3–4 人一組</li><li>先想，再輪流口說</li><li>只記錄摘要，不輸入姓名</li></ul>
-              {groupTotal > deck.length && mode === 'random' && <div className="notice">全班組數多於牌數，部分題目會重複，可用來比較不同組的觀點。</div>}
-              <button className="primary-button" onClick={startActivity}>開始第 {round} 回合 <span>→</span></button>
+              <ul><li>3–4 人圍成一組</li><li>每個人先想，再輪流說</li><li>只留下小組想法，不寫姓名</li></ul>
+              {groupTotal > deck.length && mode === 'random' && <div className="notice">小組數比卡片多，有些組可能遇到相同情境。分享時，我們可以比較彼此的想法。</div>}
+              <button className="primary-button" onClick={startActivity}>領取第 {round} 回合情境 <span>→</span></button>
             </aside>
           </section>
         </>
@@ -169,8 +169,8 @@ export default function Home() {
 
       {view === 'choice' && (
         <section className="choice-screen">
-          <span className="eyebrow">學生三選一・第 {groupNumber} 組</span><h1>先看標題，選一張最想討論的卡。</h1><p>不要急著選最簡單的。說說看：為什麼這個情境值得我們花時間討論？</p>
-          <div className="choice-grid">{offeredCards.map((card, index) => <button key={card.id} className="choice-card" onClick={() => resetRound(card)}><span>選項 {index + 1}</span><b>{card.id}</b><h2>{card.title}</h2><div><em>{card.level}</em>{card.ethics.slice(0, 1).map((tag) => <i key={tag}>{tag}</i>)}</div><strong>選擇這張卡 →</strong></button>)}</div>
+          <span className="eyebrow">我們自己三選一・第 {groupNumber} 組</span><h1>一起選一張，我們真正想討論的卡。</h1><p>先看看三個標題，再輪流說說自己想選哪一張，以及為什麼。</p>
+          <div className="choice-grid">{offeredCards.map((card, index) => <button key={card.id} className="choice-card" onClick={() => resetRound(card)}><span>選項 {index + 1}</span><b>{card.id}</b><h2>{card.title}</h2><div><em>{card.level}</em>{card.ethics.slice(0, 1).map((tag) => <i key={tag}>{tag}</i>)}</div><strong>我們就選這張 →</strong></button>)}</div>
           <button className="text-button" onClick={() => setView('setup')}>← 返回設定</button>
         </section>
       )}
@@ -178,40 +178,40 @@ export default function Home() {
       {view === 'play' && currentCard && (
         <section className="play-layout">
           <aside className="play-sidebar">
-            <span className="eyebrow">ROUND {String(round).padStart(2, '0')}</span><h2>小組口說任務</h2>
-            <ol><li><b>1</b><span>每人先說出初步判斷</span></li><li><b>2</b><span>找出組內最大的分歧</span></li><li><b>3</b><span>提出兼顧不同角色的做法</span></li></ol>
-            <div className={`live-timer ${secondsLeft === 0 ? 'done' : ''}`}><span>討論時間</span><strong>{formatTime(secondsLeft)}</strong><button onClick={() => setRunning((value) => !value)}>{secondsLeft === 0 ? '時間到' : running ? '暫停' : '開始計時'}</button></div>
+            <span className="eyebrow">第 {String(round).padStart(2, '0')} 回合</span><h2>我們這回合要完成</h2>
+            <ol><li><b>1</b><span>每個人先說出自己的想法</span></li><li><b>2</b><span>聽聽彼此哪裡想得不一樣</span></li><li><b>3</b><span>一起提出兼顧不同角色的做法</span></li></ol>
+            <div className={`live-timer ${secondsLeft === 0 ? 'done' : ''}`}><span>留給我們的討論時間</span><strong>{formatTime(secondsLeft)}</strong><button onClick={() => setRunning((value) => !value)}>{secondsLeft === 0 ? '時間到' : running ? '先暫停' : '開始倒數'}</button></div>
             <button className="text-button" onClick={() => setView('setup')}>← 回到設定</button>
           </aside>
 
           <section className="game-stage live-stage">
             <div className="stage-top"><span className="stage-kicker">{deckLabels[currentCard.deck]}・{currentCard.level}</span><span className="card-count">{currentCard.id}</span></div>
             <article className="scenario-card">
-              {!flipped ? <div className="card-face"><div className="card-meta"><span>AI 倫理情境</span><span>先別急著找答案</span></div><div className="scenario-number">{currentCard.id.replace(/\D/g, '').padStart(2, '0')}</div><h2>{currentCard.title}</h2><p>{currentCard.situation}</p><div className="question-box"><small>核心提問</small><strong>{currentCard.question}</strong></div></div>
-              : <div className="card-face guide-face"><div className="card-meta"><span>引導觀點</span><span>不是標準答案</span></div><h2>換一個角度，再想一次。</h2><ol>{prompts.map((prompt) => <li key={prompt}>{prompt}</li>)}</ol><div className="tag-row">{currentCard.ethics.map((tag) => <span key={tag}>{tag}</span>)}</div></div>}
+              {!flipped ? <div className="card-face"><div className="card-meta"><span>我們的 AI 倫理情境</span><span>先說想法，不急著找答案</span></div><div className="scenario-number">{currentCard.id.replace(/\D/g, '').padStart(2, '0')}</div><h2>{currentCard.title}</h2><p>{currentCard.situation}</p><div className="question-box"><small>一起想一想</small><strong>{currentCard.question}</strong></div></div>
+              : <div className="card-face guide-face"><div className="card-meta"><span>幫助我們想得更完整</span><span>沒有唯一的標準答案</span></div><h2>聽完彼此，再換一個角度想。</h2><ol>{prompts.map((prompt) => <li key={prompt}>{prompt}</li>)}</ol><div className="tag-row">{currentCard.ethics.map((tag) => <span key={tag}>{tag}</span>)}</div></div>}
             </article>
             <button className="flip-button" onClick={() => setFlipped((value) => !value)}><span>{flipped ? '↶' : '↻'}</span>{flipped ? '回到情境' : '翻開引導觀點'}</button>
           </section>
 
           <aside className="record-panel">
-            <div className="section-title small"><span>✎</span><div><small>GROUP NOTES</small><h2>只記錄關鍵轉折</h2></div></div>
-            <label><span>我們原本的看法</span><textarea value={notes.initial} onChange={(event) => setNotes({ ...notes, initial: event.target.value })} placeholder="一句話即可…" /></label>
-            <label><span>聽完彼此後，改變了什麼？</span><textarea value={notes.changed} onChange={(event) => setNotes({ ...notes, changed: event.target.value })} placeholder="可以寫：沒有改變，但…" /></label>
-            <label><span>組內最大的分歧</span><textarea value={notes.difference} onChange={(event) => setNotes({ ...notes, difference: event.target.value })} placeholder="我們不同意的地方是…" /></label>
-            <label><span>我們建議的做法</span><textarea value={notes.action} onChange={(event) => setNotes({ ...notes, action: event.target.value })} placeholder="兼顧不同角色的做法…" /></label>
-            <button className="primary-button" onClick={() => setView('summary')}>完成本回合 <span>→</span></button>
+            <div className="section-title small"><span>✎</span><div><small>想法紀錄</small><h2>留下想法改變的瞬間</h2></div></div>
+            <label><span>一開始，我們怎麼想？</span><textarea value={notes.initial} onChange={(event) => setNotes({ ...notes, initial: event.target.value })} placeholder="用一句話寫下來…" /></label>
+            <label><span>聽完彼此後，我們改變了什麼？</span><textarea value={notes.changed} onChange={(event) => setNotes({ ...notes, changed: event.target.value })} placeholder="我們開始注意到…" /></label>
+            <label><span>我們還有哪些不同看法？</span><textarea value={notes.difference} onChange={(event) => setNotes({ ...notes, difference: event.target.value })} placeholder="我們還沒有共識的是…" /></label>
+            <label><span>我們共同提出的做法</span><textarea value={notes.action} onChange={(event) => setNotes({ ...notes, action: event.target.value })} placeholder="我們想試試看…" /></label>
+            <button className="primary-button" onClick={() => setView('summary')}>整理我們的討論 <span>→</span></button>
           </aside>
         </section>
       )}
 
       {view === 'summary' && currentCard && (
         <section className="summary-screen">
-          <div className="summary-heading"><span className="eyebrow">第 {round} 回合・討論統整</span><h1>答案可以不同，理由要看得見。</h1><p>{currentCard.id}・{currentCard.title}</p></div>
+          <div className="summary-heading"><span className="eyebrow">我們的第 {round} 回合討論</span><h1>想法可以不同，每個理由都值得被看見。</h1><p>{currentCard.id}・{currentCard.title}</p></div>
           <div className="summary-grid">
-            <div className="perspective-card"><h2>這回合，我們用到了哪些觀點？</h2><p>不是計分測驗，請勾選討論中真正出現過的思考。</p><div className="perspective-grid">{perspectiveOptions.map((item) => <button key={item} className={perspectives.includes(item) ? 'checked' : ''} onClick={() => togglePerspective(item)}><span>{perspectives.includes(item) ? '✓' : '+'}</span>{item}</button>)}</div><div className="thinking-score"><strong>{perspectives.length}</strong><span>個思辨視角<br />已經被看見</span></div></div>
-            <div className="report-card"><div className="report-top"><span>第 {groupNumber} 組分享小卡</span><b>{currentCard.id}</b></div><h2>{currentCard.title}</h2><dl><div><dt>最大的分歧</dt><dd>{notes.difference || '我們還沒記錄這個部分。'}</dd></div><div><dt>討論後的建議</dt><dd>{notes.action || '我們還沒記錄這個部分。'}</dd></div></dl><div className="tag-row">{currentCard.ethics.map((tag) => <span key={tag}>{tag}</span>)}</div></div>
+            <div className="perspective-card"><h2>我們剛剛用了哪些思考方法？</h2><p>回想剛才的對話，勾選真正出現過的思考，不需要每一項都選。</p><div className="perspective-grid">{perspectiveOptions.map((item) => <button key={item} className={perspectives.includes(item) ? 'checked' : ''} onClick={() => togglePerspective(item)}><span>{perspectives.includes(item) ? '✓' : '+'}</span>{item}</button>)}</div><div className="thinking-score"><strong>{perspectives.length}</strong><span>個思考角度<br />被我們看見</span></div></div>
+            <div className="report-card"><div className="report-top"><span>我們是第 {groupNumber} 組</span><b>{currentCard.id}</b></div><h2>{currentCard.title}</h2><dl><div><dt>我們還有不同看法的地方</dt><dd>{notes.difference || '我們還沒記錄這個部分。'}</dd></div><div><dt>我們想採取的做法</dt><dd>{notes.action || '我們還沒記錄這個部分。'}</dd></div></dl><div className="tag-row">{currentCard.ethics.map((tag) => <span key={tag}>{tag}</span>)}</div></div>
           </div>
-          <div className="summary-actions"><button className="secondary-button" onClick={downloadSummary}>下載討論紀錄</button><button className="primary-button" onClick={nextRound}>進入下一回合 <span>→</span></button></div>
+          <div className="summary-actions"><button className="secondary-button" onClick={downloadSummary}>帶走我們的討論紀錄</button><button className="primary-button" onClick={nextRound}>再探索一個情境 <span>→</span></button></div>
         </section>
       )}
     </main>
